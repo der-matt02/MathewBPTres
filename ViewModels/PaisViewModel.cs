@@ -42,10 +42,21 @@ namespace MathewBPTres.ViewModels
         public async Task ObtenerListado()
         {
             CountriesRepo repo = new CountriesRepo("Countries.db");
-            Pais pais = await repo.DevuelveListadoPaises();
-            repo.GuardarPaises(pais);
-            Model.Name = pais.Name;
-            OnPropertyChanged(nameof(Model));
+            List<Pais> listaPaises = repo.DevuelveListadoPaises();
+
+            if (listaPaises != null && listaPaises.Any())
+            {
+                // Suponiendo que queremos el primer país de la lista
+                Pais primerPais = listaPaises.First();
+                Model.Name = primerPais.Name;
+                Model.Region = primerPais.Region;
+                Model.Subregion = primerPais.Subregion;
+                Model.Status = primerPais.Status;
+                Model.StudentName = primerPais.StudentName;
+                Model.CodigoPersonal = primerPais.CodigoPersonal;
+
+                OnPropertyChanged(nameof(Model));
+            }
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
