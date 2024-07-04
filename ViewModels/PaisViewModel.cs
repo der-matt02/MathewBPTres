@@ -45,18 +45,20 @@ namespace MathewBPTres.ViewModels
         public async Task ObtenerListado()
         {
             CountriesRepo repo = new CountriesRepo("CT.BD");
-            OnPropertyChanged(nameof(Countries));
+            OnPropertyChanged(nameof(Model));
         }
 
         public async Task ActualizarPais()
         {
-            repo.UpdateCountry(Model);
+            CountriesRepo repo = new CountriesRepo("CT.BD");
+            repo.ActualizarPaises(Model);
             await ObtenerListado();
         }
 
         public void EliminarPais(string codigoPersonal)
         {
-            repo.DeleteCountry(codigoPersonal);
+            CountriesRepo repo = new CountriesRepo("CT.BD");
+            repo.EliminarPaises(codigoPersonal);
             ObtenerListado().ConfigureAwait(false);
         }
 
