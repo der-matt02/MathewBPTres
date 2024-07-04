@@ -26,8 +26,8 @@ namespace MathewBPTres.ViewModels
             }
         }
         public ICommand ComandoObtenerListado { get; }
-
-        public ICommand ComandoMuestraPersonaje { get; }
+        public ICommand ComandoActualizarPais { get; }
+        public ICommand ComandoEliminarPais { get; }
 
         //Constructor
         public PaisViewModel()
@@ -35,29 +35,32 @@ namespace MathewBPTres.ViewModels
             Model = new Pais();
 
             ComandoObtenerListado = new Command(async () => await ObtenerListado());
-            // ComandoMuestraPersonaje = new Command(async () => await ObtenerChiste());
+            ComandoActualizarPais = new Command(async () => await ActualizarPais());
+            ComandoEliminarPais = new Command<string>(codigoPersonal => EliminarPais(codigoPersonal));
+
+            ObtenerListado().ConfigureAwait(false);
         }
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public async Task ObtenerListado()
         {
-            CountriesRepo repo = new CountriesRepo("Countries.db");
-            List<Pais> listaPaises = repo.DevuelveListadoPaises();
-
-            if (listaPaises != null && listaPaises.Any())
-            {
-                // Suponiendo que queremos el primer país de la lista
-                Pais primerPais = listaPaises.First();
-                Model.Name = primerPais.Name;
-                Model.Region = primerPais.Region;
-                Model.Subregion = primerPais.Subregion;
-                Model.Status = primerPais.Status;
-                Model.StudentName = primerPais.StudentName;
-                Model.CodigoPersonal = primerPais.CodigoPersonal;
-
-                OnPropertyChanged(nameof(Model));
-            }
+            CountriesRepo repo = new CountriesRepo("CT.BD");
+            OnPropertyChanged(nameof(Countries));
         }
+
+        public async Task ActualizarPais()
+        {
+            repo.UpdateCountry(Model);
+            await ObtenerListado();
+        }
+
+        public void EliminarPais(string codigoPersonal)
+        {
+            repo.DeleteCountry(codigoPersonal);
+            ObtenerListado().ConfigureAwait(false);
+        }
+
+
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

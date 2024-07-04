@@ -40,6 +40,20 @@ namespace MathewBPTres.Repositories
             conn.Insert(paises);
         }
 
+        public void ActualizarPaises(Pais country)
+        {
+            conn.Update(country);
+        }
+
+        public void EliminarPaises(string codigoPersonal)
+        {
+            var country = conn.Table<Pais>().FirstOrDefault(p => p.CodigoPersonal == codigoPersonal);
+            if (country != null)
+            {
+                conn.Delete(country);
+            }
+        }
+
         public async Task<Pais> DevuelvePais()
         {
             HttpClient client = new HttpClient();

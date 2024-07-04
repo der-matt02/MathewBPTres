@@ -19,6 +19,9 @@ namespace MathewBPTres
     		builder.Logging.AddDebug();
 #endif
 
+            string dbPath = FileAccessHelper.GetLocalFilePath("CT.BD");
+            builder.Services.AddSingleton<CountriesRepo>(s => ActivatorUtilities.CreateInstance<ChuckNorrisRespositorio>(s, dbPath));
+
             return builder.Build();
         }
     }
